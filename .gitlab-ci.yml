@@ -20,6 +20,6 @@ job_deploy:
   stage: deploy
   script:
     - git config --global push.default simple 
-    - git push --force https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/gperreymond/snapbook-api-gateway.git HEAD:master
+    - git push --force https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/gperreymond/snapbook-microservice-opencv.git HEAD:master
   only:
     - master
