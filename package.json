@@ -1,0 +1,27 @@
+{
+  "name": "snapbook-microservice-opencv",
+  "version": "2.0.0",
+  "description": "Mise à disposition OpenCV via des microservices.",
+  "scripts": {
+    "test": "grunt test",
+    "start": "node src/index.js"
+  },
+  "author": {
+    "name": "Gilles Perreymond",
+    "email": "gperreymond@gmail.com"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "dependencies": {
+    "nan": "1.8.4",
+    "native-opencv": "3.0.0",
+    "seneca": "0.7.1"
+  },
+  "devDependencies": {
+    "chai": "3.3.0",
+    "grunt": "0.4.5",
+    "grunt-contrib-jshint": "0.11.3"
+  },
+  "private": true
+}
