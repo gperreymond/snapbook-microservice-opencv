@@ -1,7 +1,7 @@
 {
   "name": "snapbook-microservice-opencv",
   "version": "2.0.0",
-  "description": "Mise à disposition OpenCV via des microservices.",
+  "description": "Mise à disposition d'OpenCV via des microservices.",
   "scripts": {
     "test": "grunt test",
     "start": "node src/index.js"

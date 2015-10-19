@@ -1,0 +1,25 @@
+image: node:0.12.7
+
+stages:
+  - test
+  - deploy
+
+job_test:
+  stage: test
+  script:
+    - node --version
+    - npm update -g npm
+    - npm install -g mocha
+    - npm install -g grunt-cli
+    - npm install 
+    - npm test
+  only:
+    - master
+
+job_deploy:
+  stage: deploy
+  script:
+    - git config --global push.default simple 
+    - git push --force https://$GITHUB_USER:$GITHUB_PASSWORD@github.com/gperreymond/snapbook-api-gateway.git HEAD:master
+  only:
+    - master
