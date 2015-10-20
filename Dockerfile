@@ -23,4 +23,4 @@ RUN node-gyp build
 EXPOSE 10101
 
 # Running
-CMD npm start
+CMD node .
