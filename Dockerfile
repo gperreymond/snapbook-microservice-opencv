@@ -7,6 +7,7 @@ MAINTAINER Gilles Perreymond <gperreymond@gmail.com>
 # Add the current working folder as a mapped folder at /app
 COPY ./package.json /app/package.json
 COPY ./src-js /app
+COPY ./binding.gyp /app/binding.gyp
 COPY ./src /app/src
 
 # Set the current working directory to the new mapped folder.

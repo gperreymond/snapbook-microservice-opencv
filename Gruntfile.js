@@ -15,12 +15,23 @@ module.exports = function(grunt) {
 				quotmark: 'single'
 			}
 		},
+		simplemocha: {
+			options: {
+				timeout: 3000,
+				ignoreLeaks: false,
+				ui: 'bdd',
+				reporter: 'spec'
+			},
+			all: { src: ['test/*.js'] }
+		}
 	});
 	
 	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-simple-mocha');
 	
 	grunt.registerTask('test', [
-		'jshint'
+		'jshint',
+		'simplemocha'
 	]);
 	
 };
