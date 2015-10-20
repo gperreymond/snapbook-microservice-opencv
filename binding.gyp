@@ -10,59 +10,59 @@
             'target_name': "cloudcv",
 
             'sources': [ 
-                "sources/cloudcv.cpp", 
-                "sources/cloudcv.hpp",
+                "src/cloudcv.cpp", 
+                "src/cloudcv.hpp",
 
-                "sources/framework/marshal/marshal.hpp",                
-                "sources/framework/marshal/marshal.cpp",
+                "src/framework/marshal/marshal.hpp",                
+                "src/framework/marshal/marshal.cpp",
 
-                "sources/framework/marshal/stl.hpp",                
-                "sources/framework/marshal/stl.cpp",
+                "src/framework/marshal/stl.hpp",                
+                "src/framework/marshal/stl.cpp",
                 
-                "sources/framework/marshal/opencv.hpp",                
-                "sources/framework/marshal/opencv.cpp",
+                "src/framework/marshal/opencv.hpp",                
+                "src/framework/marshal/opencv.cpp",
                 
-                "sources/framework/marshal/primitives.hpp",                
-                "sources/framework/marshal/primitives.cpp",
+                "src/framework/marshal/primitives.hpp",                
+                "src/framework/marshal/primitives.cpp",
 
-                "sources/framework/marshal/node_object_builder.hpp",
-                "sources/framework/marshal/node_object_builder.cpp",
+                "src/framework/marshal/node_object_builder.hpp",
+                "src/framework/marshal/node_object_builder.cpp",
                 
-                "sources/framework/Image.hpp",                
-                "sources/framework/Image.cpp",
+                "src/framework/Image.hpp",                
+                "src/framework/Image.cpp",
 
-                "sources/framework/ImageSource.hpp",                
-                "sources/framework/ImageSource.cpp",
+                "src/framework/ImageSource.hpp",                
+                "src/framework/ImageSource.cpp",
 
-                "sources/framework/Job.hpp",                
-                "sources/framework/Job.cpp",
+                "src/framework/Job.hpp",                
+                "src/framework/Job.cpp",
 
-                "sources/framework/Async.hpp",
-                "sources/framework/Async.cpp",
+                "src/framework/Async.hpp",
+                "src/framework/Async.cpp",
                     
-                "sources/framework/NanCheck.hpp",
-                "sources/framework/NanCheck.cpp",
+                "src/framework/NanCheck.hpp",
+                "src/framework/NanCheck.cpp",
                 
-                "sources/modules/common/Numeric.cpp", 
-                "sources/modules/common/Numeric.hpp",                 
+                "src/modules/common/Numeric.cpp", 
+                "src/modules/common/Numeric.hpp",                 
 
-                "sources/modules/common/Color.hpp", 
-                "sources/modules/common/ScopedTimer.hpp", 
+                "src/modules/common/Color.hpp", 
+                "src/modules/common/ScopedTimer.hpp", 
 
-                "sources/modules/common/ImageUtils.hpp", 
-                "sources/modules/common/ImageUtils.cpp", 
+                "src/modules/common/ImageUtils.hpp", 
+                "src/modules/common/ImageUtils.cpp", 
 
-                "sources/modules/analyze/analyze.cpp", 
-                "sources/modules/analyze/analyze.hpp", 
-                "sources/modules/analyze/binding.cpp", 
-                "sources/modules/analyze/dominantColors.hpp", 
-                "sources/modules/analyze/dominantColors.cpp", 
+                "src/modules/analyze/analyze.cpp", 
+                "src/modules/analyze/analyze.hpp", 
+                "src/modules/analyze/binding.cpp", 
+                "src/modules/analyze/dominantColors.hpp", 
+                "src/modules/analyze/dominantColors.cpp", 
 
-                "sources/modules/buildInformation/buildInformation.cpp", 
+                "src/modules/buildInformation/buildInformation.cpp", 
 
-                "sources/modules/cameraCalibration/CameraCalibrationBinding.cpp", 
-                "sources/modules/cameraCalibration/CameraCalibrationAlgorithm.hpp", 
-                "sources/modules/cameraCalibration/CameraCalibrationAlgorithm.cpp", 
+                "src/modules/cameraCalibration/CameraCalibrationBinding.cpp", 
+                "src/modules/cameraCalibration/CameraCalibrationAlgorithm.hpp", 
+                "src/modules/cameraCalibration/CameraCalibrationAlgorithm.cpp", 
             ],
 
             'include_dirs': [
