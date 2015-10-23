@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var Blipp = require('blipp');
 

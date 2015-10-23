@@ -1,4 +1,4 @@
-'use-strict';
+"use strict";
 
 var Hapi = require('hapi');
 var Routes = require('./routes');
@@ -27,7 +27,7 @@ if (!process.env.SNAPBOOK_NPM_TEST_PROCESS) {
     require('./plugins/'+item)(server);
     callback(null, item);
   }, function(err, results) {
-    server.route(Routes.endpoints);
+    if (!err && results) server.route(Routes.endpoints);
   });
 } else {
   server.route(Routes.endpoints);
