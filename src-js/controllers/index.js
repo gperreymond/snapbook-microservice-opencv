@@ -3,7 +3,7 @@
 // Wee will have to change that very soon plz !
 var cloudcv;
 if (process.env.TUTUM_SERVICE_HOSTNAME) {
-  cloudcv = require('./build/Release/cloudcv');
+  cloudcv = require('../build/Release/cloudcv');
 } else {
   cloudcv = require('../../build/Release/cloudcv');
 }
