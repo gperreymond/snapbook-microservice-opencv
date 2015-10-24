@@ -6,8 +6,7 @@ if (process.env.TUTUM_SERVICE_HOSTNAME) {
   cloudcv = require('../build/Release/cloudcv');
 } else {
   cloudcv = require('../../build/Release/cloudcv');
-}
-
+} 
 
 var path = require('path');
 var fse = require('fs-extra');
