@@ -1,6 +1,14 @@
 "use strict";
 
-var cloudcv = require('../../build/Release/cloudcv');
+// Wee will have to change that very soon plz !
+var cloudcv;
+if (process.env.TUTUM_SERVICE_HOSTNAME) {
+  cloudcv = require('./build/Release/cloudcv');
+} else {
+  cloudcv = require('../../build/Release/cloudcv');
+}
+
+
 var path = require('path');
 var fse = require('fs-extra');
 var Boom = require('boom');
