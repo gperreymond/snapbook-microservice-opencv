@@ -5,8 +5,8 @@ var Routes = require('./routes');
 
 // !-- FOR TESTS
 var options = {
-  host: process.env.SNAPBOOK_MICROSERVICE_OPENCV_ADDR || 'localhost',
-  port: process.env.SNAPBOOK_MICROSERVICE_OPENCV_PORT || '10101'
+  host: process.env.IP || 'localhost',
+  port: process.env.PORT || 10101
 };
 // --!
 
@@ -21,7 +21,7 @@ var server = new Hapi.Server({
 
 server.connection(options);
 
-if (!process.env.SNAPBOOK_NPM_TEST_PROCESS) {
+if (!process.env.ENABLE_NPM_TEST) {
   var async = require('async');
   async.mapSeries(['blipp', 'good'], function(item, callback) {
     require('./plugins/'+item)(server);

@@ -1,12 +1,13 @@
 # snapbook
 ## microservice / opencv
 
-- SNAPBOOK_MICROSERVICE_OPENCV_ADDR
-- SNAPBOOK_MICROSERVICE_OPENCV_PORT
-- SNAPBOOK_API_GATEWAY_VOLUMES_APPLICATIONS
-- SNAPBOOK_NPM_TEST_PROCESS
+- ENABLE_NEWRELIC
+- ENABLE_NPM_TEST
 
-Mettre "SNAPBOOK_NPM_TEST_PROCESS=1" avant d'effectuer les tests.
+/volumes/applications
+
+"ENABLE_NEWRELIC = 1" via tutum pour activer le monitoring.
+"ENABLE_NPM_TEST = 1" via ckoud9 pour activer les tests.
 
 [![build status](https://gitlab.com/ci/projects/11618/status.png?ref=master)](https://gitlab.com/ci/projects/11618?ref=master)
 
