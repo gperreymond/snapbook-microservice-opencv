@@ -18,14 +18,14 @@
     "blipp": "2.2.1",
     "boom": "2.9.0",
     "chairo": "0.2.0",
+    "fs-extra": "0.24.0",
     "good": "6.4.0",
     "good-console": "5.1.0",
     "hapi": "8.8.0",
     "lodash": "3.10.1",
     "nan": "1.8.4",
     "native-opencv": "3.0.0",
-    "node-dir": "0.1.10",
-    "fs-extra": "0.24.0"
+    "node-dir": "0.1.10"
   },
   "devDependencies": {
     "chai": "3.3.0",
