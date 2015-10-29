@@ -10,7 +10,7 @@ if (process.env.TUTUM_SERVICE_HOSTNAME) {
 
 var path = require('path');
 var fse = require('fs-extra');
-var Boom = require('boom');
+var Q = require('q'); // https://github.com/kriskowal/q
 
 exports.alive = {
   auth: false,
@@ -29,87 +29,164 @@ exports.compare = {
 exports.compute = {
   auth: false,
   handler: function(request, reply) {
-    // load
-    var dirpath = path.dirname(request.payload.filepath);
-    var basename = path.basename(request.payload.filepath,'.jpg');
-    cloudcv.loadImage(request.payload.filepath, function(err, imview) {
-      if (err) {
-        console.log(err);
-        return reply(Boom.badImplementation());
-      }
-      // resize
-      var maxWidth = 512;
-      var maxHeight = 512;
-      getOptimalSizeImage(imview, maxWidth, maxHeight, function(w, h) {
-        imview.thumbnail(w, h, function(err, imview_thumb) {
-          if (err) {
-            console.log(err);
-            return reply(Boom.badImplementation());
-          }
-          // compute
-          imview_thumb.compute('AKAZE', function(err, imview_compute) {
-            if (err) {
-              console.log(err);
-              return reply(Boom.badImplementation());
-            }
-            // save thumb
-            imview_thumb.asPngStream(function(err, data) {
-              if (err) {
-                console.log(err);
-                return reply(Boom.badImplementation());
-              }
-              var file_cpte = path.normalize(dirpath+'/thumbs/'+basename+'-thb.png');
-              fse.ensureFileSync(file_cpte);
-              fse.writeFileSync(file_cpte, new Buffer(data));
-              // save keypoints
-              var keypointsFile = path.normalize(dirpath+'/keypoints/'+basename+'-kpts.yml');
-              fse.ensureFileSync(keypointsFile);
-              fse.writeFileSync(keypointsFile, imview_thumb.keypoints());
-              // save descriptors
-              var descriptorsFile = path.normalize(dirpath+'/descriptors/'+basename+'-dcts.yml');
-              fse.ensureFileSync(descriptorsFile);
-              fse.writeFileSync(descriptorsFile, imview_thumb.descriptors());
-              // save compute
-              imview_compute.asPngStream(function(err, data) {
-                if (err) {
-                  console.log(err);
-                  return reply(Boom.badImplementation());
-                }
-                var file_cpte = path.normalize(dirpath+'/computes/'+basename+'-cpte.png');
-                fse.ensureFileSync(file_cpte);
-                fse.writeFileSync(file_cpte, new Buffer(data));
-                // return 200
-                reply({compute:true});
-              });
-            });
-          });
-        });
-      });
+    var onFail = false;
+    promisedCompute(request.payload.filepath)
+    .progress(function(progress) {
+      console.log('Promise Progress', progress);
+    })
+    .fail(function(error) {
+      console.log('Promise Fail', request.payload.filepath, error);
+      onFail = true;
+    })
+    .done(function() {
+      console.log('Promise Done', request.payload.filepath);
+      reply({done:!onFail});
     });
   }
 };
 
-function getOptimalSizeImage(imgview, maxWidth, maxHeight, callback) {
-  var w;
-  var h;
-  if ( imgview.width() > maxWidth || imgview.height() > maxHeight ) {
-    var imgWidth = imgview.width();
-    var imgHeight = imgview.height();
-    var _width = imgview.width();
-    var _height = imgview.height();
-    if (maxWidth && _width > maxWidth) {
-      _width = maxWidth;
-      _height = (imgHeight * _width / imgWidth);
+function promisedCompute(filepath) {
+  
+  var imview;
+  var imview_thumb;
+  var imview_compute;
+  
+  return promisedLoadImage(filepath)
+  .then(function(result) {
+    imview = result;
+    return promisedResizeImage(imview, filepath);
+  })
+  .then(function(result) {
+    imview_thumb = result;
+    return promisedComputeImage(imview_thumb, filepath);
+  })
+  .then(function(result) {
+    imview_compute = result;
+    return promisedSaveImage(imview_compute, filepath, 'computes', 'cpte');
+  })
+  .then(function() {
+    return promisedSaveImage(imview_thumb, filepath, 'thumbs', 'thb');
+  })
+  .then(function() {
+    return promisedSaveImageKeypoints(imview_thumb, filepath);
+  })
+  .then(function() {
+    return promisedSaveImageDescriptors(imview_thumb, filepath);
+  });
+  
+}
+
+function promisedLoadImage(filepath) {
+  var deferred = Q.defer();
+  cloudcv.loadImage(filepath, function(error, imview) {
+    deferred.notify({ step:'Load Image', filepath:filepath });
+    if (error) {
+      deferred.reject(new Error(error));
+    } else {
+      deferred.resolve(imview);
     }
-    if (maxHeight && _height > maxHeight) {
-      _height = maxHeight;
-      _width = (imgWidth * _height / imgHeight);
+  });
+  return deferred.promise;
+}
+
+function promisedResizeImage(imview, filepath) {
+  var deferred = Q.defer();
+  deferred.notify({ step:'Resize Image', filepath:filepath });
+  try {
+    var w;
+    var h;
+    var maxWidth = 512;
+    var maxHeight = 512;
+    if ( imview.width() > maxWidth || imview.height() > maxHeight ) {
+      var imgWidth = imview.width();
+      var imgHeight = imview.height();
+      var _width = imview.width();
+      var _height = imview.height();
+      if (maxWidth && _width > maxWidth) {
+        _width = maxWidth;
+        _height = (imgHeight * _width / imgWidth);
+      }
+      if (maxHeight && _height > maxHeight) {
+        _height = maxHeight;
+        _width = (imgWidth * _height / imgHeight);
+      }
+      w = _width;
+      h = _height;
+    } else {
+      w = imview.width();
+      h = imview.height();
     }
-    w = _width;
-    h = _height;
-  } else {
-    w = imgview.width();
-    h = imgview.height();
+    imview.thumbnail(w, h, function(error, imview_thumb) {
+      if (error) {
+        deferred.reject(new Error(error));
+      } else {
+        deferred.resolve(imview_thumb);
+      }
+    });
+  } catch (e) {
+    deferred.reject(new Error(e));
   }
-  callback(w, h);
+  return deferred.promise;
+}
+
+function promisedComputeImage(imview, filepath) {
+  var deferred = Q.defer();
+  imview.compute('AKAZE', function(error, imview_compute) {
+    deferred.notify({ step:'Compute Image', filepath:filepath });
+    if (error) {
+      deferred.reject(new Error(error));
+    } else {
+      deferred.resolve(imview_compute);
+    }
+  });
+  return deferred.promise;
+}
+
+function promisedSaveImage(imview, filepath, target, suffix) {
+  var deferred = Q.defer();
+  var dirpath = path.dirname(filepath);
+  var basename = path.basename(filepath,'.jpg');
+  imview.asPngStream(function(error, data) {
+    deferred.notify({ step:'Save Image', filepath:filepath, target:target });
+    if (error) {
+      deferred.reject(new Error(error));
+    } else {
+      var filepath_save = path.normalize(dirpath+'/'+target+'/'+basename+'-'+suffix+'.png');
+      fse.removeSync(filepath_save);
+      fse.ensureFileSync(filepath_save);
+      fse.writeFileSync(filepath_save, new Buffer(data));
+      deferred.resolve();
+    }
+  });
+  return deferred.promise;
+}
+
+function promisedSaveImageKeypoints(imview, filepath) {
+  var deferred = Q.defer();
+  var dirpath = path.dirname(filepath);
+  var basename = path.basename(filepath,'.jpg');
+  
+  var keypointsFile = path.normalize(dirpath+'/keypoints/'+basename+'-kpts.yml');
+  fse.ensureFileSync(keypointsFile);
+  fse.writeFileSync(keypointsFile, imview.keypoints());
+  
+  deferred.notify({ step:'Save Keypoints', filepath:filepath, target:'keypoints' });
+  deferred.resolve();
+  
+  return deferred.promise;
+}
+
+function promisedSaveImageDescriptors(imview, filepath) {
+  var deferred = Q.defer();
+  var dirpath = path.dirname(filepath);
+  var basename = path.basename(filepath,'.jpg');
+  
+  var descriptorsFile = path.normalize(dirpath+'/descriptors/'+basename+'-dcts.yml');
+  fse.ensureFileSync(descriptorsFile);
+  fse.writeFileSync(descriptorsFile, imview.descriptors());
+  
+  deferred.notify({ step:'Save Descriptors', filepath:filepath, target:'descriptors' });
+  deferred.resolve();
+  
+  return deferred.promise;
 }

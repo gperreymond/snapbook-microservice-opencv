@@ -5,8 +5,8 @@ var Routes = require('./routes');
 
 // !-- FOR TESTS
 var options = {
-  host: process.env.IP || 'localhost',
-  port: process.env.PORT || 10101
+  host: process.env.MICROSERVICE_IP || 'localhost',
+  port: process.env.MICROSERVICE_PORT || 10101
 };
 // --!
 

@@ -1,6 +1,8 @@
 # snapbook
 ## microservice / opencv
 
+- MICROSERVICE_IP
+- MICROSERVICE_PORT
 - ENABLE_NEWRELIC
 - ENABLE_NPM_TEST
 

@@ -16,8 +16,10 @@
   "dependencies": {
     "async": "1.4.2",
     "blipp": "2.2.1",
+    "body-parser": "1.14.1",
     "boom": "2.9.0",
     "chairo": "0.2.0",
+    "express": "4.13.3",
     "fs-extra": "0.24.0",
     "good": "6.4.0",
     "good-console": "5.1.0",
@@ -25,7 +27,8 @@
     "lodash": "3.10.1",
     "nan": "1.8.4",
     "native-opencv": "3.0.0",
-    "node-dir": "0.1.10"
+    "node-dir": "0.1.10",
+    "q": "1.4.1"
   },
   "devDependencies": {
     "chai": "3.3.0",
