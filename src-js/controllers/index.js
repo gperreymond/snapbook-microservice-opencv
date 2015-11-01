@@ -22,15 +22,8 @@ exports.alive = {
 exports.compare = {
   auth: false,
   handler: function(request, reply) {
-    reply({compare:true});
-  }
-};
-
-exports.compute = {
-  auth: false,
-  handler: function(request, reply) {
     var onFail = false;
-    promisedCompute(request.payload.filepath)
+    compareHandler(request.payload.filepath)
     .progress(function(progress) {
       console.log('Promise Progress', progress);
     })
@@ -45,7 +38,38 @@ exports.compute = {
   }
 };
 
-function promisedCompute(filepath) {
+exports.compute = {
+  auth: false,
+  handler: function(request, reply) {
+    var onFail = false;
+    computeHandler(request.payload.filepath)
+    .progress(function(progress) {
+      console.log('Promise Progress', progress);
+    })
+    .fail(function(error) {
+      console.log('Promise Fail', request.payload.filepath, error);
+      onFail = true;
+    })
+    .done(function() {
+      console.log('Promise Done', request.payload.filepath);
+      reply({done:!onFail});
+    });
+  }
+};
+
+function compareHandler(filepath) {
+  
+  var imview;
+  
+  return promisedLoadImage(filepath)
+  .then(function(result) {
+    imview = result;
+    return imview;
+  });
+  
+}
+
+function computeHandler(filepath) {
   
   var imview;
   var imview_thumb;

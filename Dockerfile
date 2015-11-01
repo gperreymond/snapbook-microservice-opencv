@@ -22,7 +22,7 @@ RUN node-gyp configure
 RUN node-gyp build
 
 # Expose port
-EXPOSE 10101
+EXPOSE 80
 
 # Running
 CMD node .
