@@ -4,6 +4,9 @@ FROM node:0.12.7
 # Maintainer
 MAINTAINER Gilles Perreymond <gperreymond@gmail.com>
 
+# Prepare apt
+RUN sudo apt-get install -y libmagick++-dev
+
 # Add the current working folder as a mapped folder at /app
 COPY ./newrelic.js /app/newrelic.js
 COPY ./package.json /app/package.json
