@@ -1,35 +1,44 @@
 "use strict";
 
 var cloudcv = require('../build/Release/cloudcv');
-
 var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 var dir = require('node-dir');
 
+/**
+ * 
+ * @source = snap filepth
+ * @application = application's patterns dirpath
+ * 
+ * node batch/compare.js source=/home/ubuntu/workspace/ftp/bo.snapbook.io/applications/uploads/2015/11/30/93ce6032-86e2-4acb-b0be-439176d82401.jpg application=/home/ubuntu/workspace/ftp/bo.snapbook.io/applications/5656de2d6c675d15135ba9dd/patterns
+ * 
+ **/ 
+
+var processes = 100;
+
 var params = {};
 process.argv.forEach(function (val, index, array) {
-  console.log(array);
   if ( index>=2 ) {
     params[val.split('=')[0]] = path.resolve(val.split('=')[1]);
   } else {
   }
 });
 
-var processes = 2;
+var t1 = new Date();
 var q = async.queue(function (task, callback) {
-  console.log('batch', task.pattern);
   batch(path.normalize(task.pattern), task.imview, function(err, result) {
     if (err) {
       callback(err, false);
     } else {
-      console.log('finished processing', result.data);
+      if ( process.env.DEBUG && result.data>0 ) console.log('finished processing', task.pattern, result.data);
       callback(false, result);
     }
   });
 }, processes);
 q.drain = function() {
-  console.log('all items have been processed');
+  var t2 = new Date();
+  if ( process.env.DEBUG ) console.log('all items have been processed', t2-t1);
 };
 
 cloudcv.loadImage(params.source, function(err, imview) {
@@ -50,23 +59,14 @@ function start(imview) {
     next();
   },
   function(err, files){
-    files = _.take(files,files.length/1);
     if (err) throw err;
-    console.log('*****', 'GLOBAL START', files.length);
-    var TS = new Date();
     async.map(files,
       function(item, cb) {
-        q.push({pattern : item, imview : imview}, function (err,result) {
-          if (err) {
-            cb(null, false);
-          } else {
-            cb(null, result);
-          }  
+        q.push({pattern : item, imview : imview}, function(err) {
+          cb(err); 
         });
       }, function(err, results) {
-        var TE = new Date();
-        console.log('*****', 'GLOBAL END','execute in', TE-TS, 'ms');
-        console.log(err, results);
+        
     });
   });
 }

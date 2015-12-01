@@ -136,7 +136,7 @@ exports.compare = {
             if (err) return callback(err, null);
             results.files = files;
             _.each(results.files, function(item) {
-              q.push({pattern_filepath : path.normalize(item), snap_imview : results.imview}, function (err) {
+              q.push({pattern_filepath : path.normalize(item), snap_imview : results.imview}, function(err) {
                 if (err) {}
               });
             });
