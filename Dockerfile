@@ -5,7 +5,7 @@ FROM node:0.12.7
 MAINTAINER Gilles Perreymond <gperreymond@gmail.com>
 
 # Prepare apt
-RUN sudo apt-get install -y libmagick++-dev
+RUN apt-get install graphicsmagick -y
 
 # Add the current working folder as a mapped folder at /app
 COPY ./newrelic.js /app/newrelic.js

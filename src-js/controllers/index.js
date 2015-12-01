@@ -13,7 +13,7 @@ var async = require('async');
 var _ = require('lodash');
 var path = require('path');
 var fse = require('fs-extra');
-var im = require('imagemagick-native');
+var gm = require('gm');
 var md5 = require('md5-file');
 
 var Boom = require('boom');
@@ -30,16 +30,18 @@ exports.analyse = {
   auth: false,
   handler: function(request, reply) {
     try {
-      im.identify({ srcData: fse.readFileSync(request.payload.filepath) }, function(err, features) {
+      gm(request.payload.filepath)
+      .identify(function(err, data) {
         if (err) return reply(Boom.badRequest(err));
         var stats = {};
         var fstats = fse.lstatSync(request.payload.filepath);
         stats.md5 = md5(request.payload.filepath);
         stats.size = fstats.size;
-        stats.mime = features.mime;
+        stats.format = data.format;
+        stats.channel = data['Channel Statistics'];
         stats.date = new Date();
-        stats.width = features.width;
-        stats.height = features.height;
+        stats.width = data.size.width;
+        stats.height = data.size.height;
         reply(stats);
       });
     } catch (e) {

@@ -1,0 +1,11 @@
+"use strict";
+
+var gm = require('gm');
+var chai = require('chai');
+var expect = chai.expect;
+var chaiHttp = require('chai-http');
+
+gm('/home/ubuntu/workspace/gitlab/snapbook-microservice-opencv/test/applications/mocha/patterns/pattern-good.jpg')
+.identify(function (err, data) {
+  if (!err) console.log(data);
+});
